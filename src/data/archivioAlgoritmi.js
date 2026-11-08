@@ -358,15 +358,33 @@ export const ARCHIVIO_ALGORITMI = {
     complessita: 'Θ(d · (n + k))',
     spazio: 'Θ(n + k) ausiliario',
     tipo: 'Stabile, Strategia LSD (Least Significant Digit)',
+    // Versione 1: Formulazione sintetica degli appunti di lezione
     righe: [
-      { id: 'RS-H', num: 'H1', text: '--- RADIX-SORT(A, d) ---' },
+      { id: 'RS-H', num: 'H1', text: '--- RADIX-SORT(A, d) [Appunti] ---' },
       { id: 'RS-1', num: 1, text: 'for i = 1 to d' },
       { id: 'RS-2', num: 2, text: '    usa un algoritmo STABILE (es. Counting Sort) su cifra i-esima (da LSD a MSD)' }
     ],
+    // Versione 2: Pseudocodice procedurale dettagliato con subroutine Counting Sort dedicata alla cifra
+    righeComplete: [
+      { id: 'RSC-H1', num: 'H1', text: '--- RADIX-SORT(A, d) [Procedurale CLRS] ---' },
+      { id: 'RSC-1',  num: 1,  text: 'for digit_idx = 1 to d' },
+      { id: 'RSC-2',  num: 2,  text: '    COUNTING-SORT-BY-DIGIT(A, digit_idx)' },
+      { id: 'RSC-H2', num: 'H2', text: '--- COUNTING-SORT-BY-DIGIT(A, digit_idx) ---' },
+      { id: 'RSC-3',  num: 1,  text: 'for i = 0 to k - 1: C[i] = 0' },
+      { id: 'RSC-4',  num: 2,  text: 'for j = 1 to A.length' },
+      { id: 'RSC-5',  num: 3,  text: '    d_val = ESTRAI-CIFRA(A[j], digit_idx)' },
+      { id: 'RSC-6',  num: 4,  text: '    C[d_val] = C[d_val] + 1' },
+      { id: 'RSC-7',  num: 5,  text: 'for i = 1 to k - 1: C[i] = C[i] + C[i - 1]' },
+      { id: 'RSC-8',  num: 6,  text: 'for j = A.length downto 1' },
+      { id: 'RSC-9',  num: 7,  text: '    d_val = ESTRAI-CIFRA(A[j], digit_idx)' },
+      { id: 'RSC-10', num: 8,  text: '    B[C[d_val]] = A[j]' },
+      { id: 'RSC-11', num: 9,  text: '    C[d_val] = C[d_val] - 1' },
+      { id: 'RSC-12', num: 10, text: 'for j = 1 to A.length: A[j] = B[j]' }
+    ],
     teoria: {
-      funzionamento: "**Precondizione Indispensabile:**\nCiascun elemento di $A[1..n]$ è rappresentabile come una tupla di $d$ cifre, in cui ciascuna cifra assume valori in un intervallo discreto $[0..k-1]$. Tutte le chiavi hanno la medesima lunghezza $d$.\n\n**Strategia LSD (Least Significant Digit):**\nOrdina le chiavi procedendo dalla colonna meno significativa ($i = 1$) verso quella più significativa ($i = d$). A ogni iterazione invoca una subroutine di ordinamento che **DEVE essere rigorosamente stabile** (come Counting Sort). In questo modo, quando si ordina rispetto alla colonna $i$-esima, elementi aventi la medesima cifra mantengono inalterato l'ordinamento relativo già consolidato sulle prime $i - 1$ cifre.",
-      invariante: "Dimostrazione di correttezza per induzione matematica su $d$:\n\n• [emerald]Base induttiva ($d = 1$)[/emerald]:\nCon numeri a cifra singola, la subroutine stabile ordina direttamente l'array, risultando banalmente corretta.\n\n• [emerald]Ipotesi induttiva[/emerald]:\nAssumiamo per ipotesi che l'array sia correttamente ordinato rispetto alle prime $i - 1$ cifre meno significative.\n\n• [emerald]Passo induttivo[/emerald]:\nAll'iterazione $i$, ordiniamo rispetto alla cifra $i$-esima. Consideriamo due generici elementi $u$ e $v$:\n- Se differiscono nella cifra $i$-esima, la subroutine li dispone nell'ordine corretto imposto dalla cifra più significativa esaminata.\n- Se hanno la medesima cifra $i$-esima, la proprietà di stabilità preserva l'ordine relativo acquisito in base alle prime $i - 1$ cifre (che per ipotesi induttiva era corretto).\nL'array risulta quindi ordinato rispetto a tutte le prime $i$ cifre.",
-      dimostrazione: "**Analisi Formale del Tempo d'Esecuzione:**\nDati $n$ numeri di $d$ cifre, ciascuna delle quali assume valori nell'intervallo $[0..k-1]$:\nIl ciclo for principale viene eseguito esattamente $d$ volte. A ogni passaggio viene invocato Counting Sort stabile, che impiega tempo $\\Theta(n + k)$:\n$$T(n, d, k) = \\Theta(d \\cdot (n + k))$$\nSe il numero di cifre $d$ è costante ($d = O(1)$) e la base rispetta $k = O(n)$, Radix Sort garantisce tempo di calcolo lineare $\\Theta(n)$."
+      funzionamento: "**Precondizione Indispensabile:**\nCiascun elemento di $A[1..n]$ è rappresentabile come una tupla di $d$ cifre, in cui ciascuna cifra assume valori in un intervallo discreto $[0..k-1]$[cite: 4, 56]. Tutte le chiavi hanno la medesima lunghezza $d$[cite: 4, 56].\n\n**Strategia LSD (Least Significant Digit):**\nOrdina le chiavi procedendo dalla colonna meno significativa ($i = 1$) verso quella più significativa ($i = d$)[cite: 4, 55, 56]. A ogni iterazione invoca una subroutine di ordinamento che **DEVE essere rigorosamente stabile** (come Counting Sort)[cite: 4, 53, 56]. In questo modo, quando si ordina rispetto alla colonna $i$-esima, elementi aventi la medesima cifra mantengono inalterato l'ordinamento relativo già consolidato sulle prime $i - 1$ cifre[cite: 53, 56].",
+      invariante: "Dimostrazione di correttezza per induzione matematica su $d$:\n\n[emerald]Base induttiva ($d = 1$)[/emerald]:\nCon numeri a cifra singola, la subroutine stabile ordina direttamente l'array, risultando banalmente corretta[cite: 14].\n\n[emerald]Ipotesi induttiva[/emerald]:\nAssumiamo per ipotesi che l'array sia correttamente ordinato rispetto alle prime $i - 1$ cifre meno significative[cite: 14, 55].\n\n[emerald]Passo induttivo[/emerald]:\nAll'iterazione $i$, ordiniamo rispetto alla cifra $i$-esima[cite: 55]. Consideriamo due generici elementi $u$ e $v$:\n- Se differiscono nella cifra $i$-esima, la subroutine li dispone nell'ordine corretto imposto dalla cifra più significativa esaminata[cite: 55].\n- Se hanno la medesima cifra $i$-esima, la proprietà di stabilità preserva l'ordine relativo acquisito in base alle prime $i - 1$ cifre (che per ipotesi induttiva era corretto)[cite: 53, 55].\nL'array risulta quindi ordinato rispetto a tutte le prime $i$ cifre[cite: 55].",
+      dimostrazione: "**Analisi Formale del Tempo d'Esecuzione:**\nDati $n$ numeri di $d$ cifre, ciascuna delle quali assume valori nell'intervallo $[0..k-1]$[cite: 4, 56]:\nIl ciclo for principale viene eseguito esattamente $d$ volte[cite: 55, 56]. A ogni passaggio viene invocato Counting Sort stabile, che impiega tempo $\\Theta(n + k)$[cite: 4, 56]:\n$$T(n, d, k) = \\Theta(d \\cdot (n + k))$$\nSe il numero di cifre $d$ è costante ($d = O(1)$) e la base rispetta $k = O(n)$, Radix Sort garantisce tempo di calcolo lineare $\\Theta(n)$[cite: 4, 56]."
     }
   },
   'bucket-sort': {
@@ -389,5 +407,218 @@ export const ARCHIVIO_ALGORITMI = {
       invariante: "Invariante di separazione dei contenitori:\nPer ogni coppia di indici di bucket $r < s$, qualsiasi valore appartenente a $B[r]$ è strettamente minore di qualsiasi elemento appartenente a $B[s]$:\n$$\\forall x \\in B[r], \\forall y \\in B[s] \\implies x < y$$\nPertanto la concatenazione lineare delle singole liste ordinate genera l'ordinamento complessivo.",
       dimostrazione: "**Dimostrazione Probabilistica del Tempo Atteso Lineare:**\nSia $n_i$ la variabile casuale che indica il numero di elementi assegnati al bucket $B[i]$.\nPoiché l'ordinamento di ciascuna lista tramite Insertion Sort richiede tempo quadratico $O(n_i^2)$, il tempo totale atteso è:\n$$E[T(n)] = \\Theta(n) + \\sum_{i=0}^{n-1} O\\left(E[n_i^2]\\right)$$\nCiascun elemento cade nel bucket $i$ con probabilità costante $p = 1/n$. Pertanto ogni $n_i$ segue una **distribuzione binomiale** con parametri $n$ e $p = 1/n$:\n$$n_i \\sim \\text{Bin}\\left(n, \\frac{1}{n}\\right)$$\nDalla statistica matematica:\n$$E[n_i] = n \\cdot p = n \\left(\\frac{1}{n}\\right) = 1$$\n$$\\text{Var}(n_i) = n \\cdot p \\cdot (1 - p) = n \\left(\\frac{1}{n}\\right) \\left(1 - \\frac{1}{n}\\right) = 1 - \\frac{1}{n}$$\nSfruttando la relazione fondamentale tra varianza e momento secondo $E[n_i^2] = \\text{Var}(n_i) + (E[n_i])^2$:\n$$E[n_i^2] = \\left(1 - \\frac{1}{n}\\right) + 1^2 = 2 - \\frac{1}{n} = O(1)$$\nSostituendo il valore del momento secondo nella sommatoria del costo atteso:\n$$E[T(n)] = \\Theta(n) + \\sum_{i=0}^{n-1} O(1) = \\Theta(n) + n \\cdot O(1) = \\Theta(n)$$\nNel caso peggiore (tutti gli elementi collidono nello stesso bucket), il tempo degenera a quello di Insertion Sort: $\\Theta(n^2)$."
     }
-  }
+  },
+
+  // ==========================================
+  // MODULO 04: TABELLE HASH
+  // ==========================================
+  'chained-hash-insert': {
+    titolo: 'CHAINED-HASH-INSERT(T, x)',
+    complessita: 'Θ(1) tempo nel caso peggiore',
+    spazio: 'O(1) ausiliario (allocazione nodo)',
+    tipo: 'Risoluzione collisioni per concatenamento',
+    // Versione 1: Formulazione sintetica degli appunti di lezione
+    righe: [
+      { id: 'CHI-H', num: 'H1', text: '--- CHAINED-HASH-INSERT(T, x) [Appunti] ---' },
+      { id: 'CHI-1', num: 1, text: 'inserisce l\'elemento x in testa alla lista T[h(x.key)]' }
+    ],
+    // Versione 2: Pseudocodice procedurale esplicito su liste doppiamente concatenate (CLRS)
+    righeComplete: [
+      { id: 'CHIC-H', num: 'H1', text: '--- CHAINED-HASH-INSERT(T, x) [CLRS / Liste Doppie] ---' },
+      { id: 'CHIC-1', num: 1, text: 'j = h(x.key)               // Calcolo slot tramite funzione hash' },
+      { id: 'CHIC-2', num: 2, text: 'x.next = T[j]              // Il nuovo nodo punta alla vecchia testa' },
+      { id: 'CHIC-3', num: 3, text: 'x.prev = NIL               // Non ha predecessori essendo in testa' },
+      { id: 'CHIC-4', num: 4, text: 'if T[j] ≠ NIL' },
+      { id: 'CHIC-5', num: 5, text: '    T[j].prev = x          // Aggiorna puntatore all\'indietro della vecchia testa' },
+      { id: 'CHIC-6', num: 6, text: 'T[j] = x                   // Lo slot punta ora al nuovo nodo x' }
+    ],
+    teoria: {
+      funzionamento: "**Precondizione:**\nTabella hash $T[0..m-1]$ di $m$ slot, ciascuno contenente il puntatore alla testa di una lista concatenata (inizialmente `NIL`). Elemento $x$ avente una chiave identificativa $x.\\text{key} \\in U$ e dati satellite associati.\n\n**Meccanica di Inserimento in Testa:**\n[cyan]Calcolo dello Slot ($j$)[/cyan]: la funzione di hash determina l'indice di destinazione $j = h(x.\\text{key})$ applicando il metodo della divisione ($k \\bmod m$) o della moltiplicazione.\n[cyan]Concatenamento (Chaining)[/cyan]: anziché cercare slot alternativi, tutti gli elementi con la medesima immagine $h(k)$ vengono accumulati in una lista dinamica associata allo slot $j$.\n[cyan]Inserimento in Tempo Costante[/cyan]: il nuovo record $x$ viene inserito **rigorosamente in testa alla lista**. Se si assume che l'elemento da inserire non sia già presente nel dizionario (oppure che i duplicati siano ammessi), l'inserimento non richiede alcuna scansione preventiva, garantendo tempo strettamente $O(1)$ nel caso peggiore.",
+      invariante: "Conservazione Strutturale delle Liste Concatenate:\nAll'inizio e al termine dell'operazione, per ogni slot $j \\in [0, m-1]$, la lista concatenata $T[j]$ contiene tutti e soli gli elementi memorizzati nel dizionario la cui chiave $k$ soddisfa $h(k) = j$. L'inserimento in testa di un nuovo record $x$ preserva l'integrità dei puntatori bidirezionali senza alterare né l'accessibilità né l'ordine reciproco degli elementi precedentemente memorizzati nella catena.",
+      dimostrazione: "**Analisi del Tempo Computazionale nel Caso Peggiore:** $[\\Theta(1)]$\nAssumendo che l'allocazione del nodo e la valutazione della funzione di hashing $h(x.\\text{key})$ richiedano tempo costante $O(1)$:\n1. Il calcolo dell'indice $j = h(x.\\text{key})$ richiede $\\Theta(1)$.\n2. L'aggiornamento dei puntatori di testa (assegnazione di `x.next`, `x.prev` e `T[j]`) coinvolge un numero finito e costante di scritture in memoria ($O(1)$).\n$$T_{\\text{insert}}(n) = O(1) + O(1) = \\Theta(1) \\quad \\text{in qualsiasi scenario (ottimo, medio, pessimo)}$$\n\n**Impatto sul Fattore di Carico:**\nL'inserimento incrementa il numero totale di elementi memorizzati da $n$ a $n + 1$, aggiornando il fattore di carico a:\n$$\\alpha = \\frac{n + 1}{m}$$\nA differenza dell'indirizzamento aperto dove $\\alpha \\le 1$, nella risoluzione per concatenamento $\\alpha$ può assumere valori arbitrariamente grandi (anche $\\alpha > 1$) senza provocare overflow della tabella, determinando unicamente la lunghezza media delle catene."
+    }
+  },
+  'chained-hash-search': {
+    titolo: 'CHAINED-HASH-SEARCH(T, k)',
+    complessita: 'Θ(1 + α) atteso | Θ(n) caso pessimo',
+    spazio: 'O(1) ausiliario in-place',
+    tipo: 'Ricerca sequenziale su lista trabocco',
+    // Versione 1: Sintetica (Appunti di lezione)
+    righe: [
+      { id: 'CHS-H', num: 'H1', text: '--- CHAINED-HASH-SEARCH(T, k) [Appunti] ---' },
+      { id: 'CHS-1', num: 1, text: 'cerca un elemento con chiave k nella lista T[h(k)]' }
+    ],
+    // Versione 2: Procedurale esplicita (CLRS / Scansione puntatori)
+    righeComplete: [
+      { id: 'CHSC-H', num: 'H1', text: '--- CHAINED-HASH-SEARCH(T, k) [Procedurale CLRS] ---' },
+      { id: 'CHSC-1', num: 1, text: 'j = h(k)                   // Calcolo dello slot primario in Θ(1)' },
+      { id: 'CHSC-2', num: 2, text: 'x = T[j]                  // Puntatore al primo nodo della lista' },
+      { id: 'CHSC-3', num: 3, text: 'while x ≠ NIL and x.key ≠ k' },
+      { id: 'CHSC-4', num: 4, text: '    x = x.next            // Scorrimento lineare della catena' },
+      { id: 'CHSC-5', num: 5, text: 'return x                  // Restituisce il puntatore al record o NIL' }
+    ],
+    teoria: {
+      funzionamento: "**Precondizione Fondamentale:**\nTabella hash $T[0..m-1]$ composta da $m$ slot contenenti puntatori a liste concatenate (ciascuna delle quali memorizza record $x$ con chiave $x.\\text{key}$). Chiave di ricerca target $k \\in U$.\n\n**Meccanica in Due Fasi:**\n[cyan]Fase 1 — Indirizzamento Diretto ad Accesso Costante ($O(1)$)[/cyan]: calcola l'indice dello slot di pertinenza $j = h(k)$ mediante la funzione hash (es. metodo della divisione $k \\bmod m$). Questa operazione isola istantaneamente l'unica lista concatenata in cui l'elemento può risiedere, eludendo l'ispezione degli altri $m-1$ bucket.\n[cyan]Fase 2 — Scansione Lineare della Catena di Trabocco[/cyan]: scorre sequenzialmente la lista $T[j]$ partendo dalla testa (`x = T[j]`). A ogni passo confronta $x.\\text{key}$ con la chiave cercata $k$:\n- **Successo**: se riscontra corrispondenza ($x.\\text{key} = k$), la ricerca si interrompe immediatamente restituendo il puntatore al record.\n- **Insuccesso**: se raggiunge la fine della lista (`NIL`) senza incontrare la chiave, certifica che $k \\notin T$ e restituisce `NIL`.\n\n**Degenerazione nel Caso Pessimo:** $[\\Theta(n)]$\nSe la funzione hash mappa disgraziatamente tutte le $n$ chiavi nello stesso identico slot $j$ (collisione totale), la lista trabocco conterrà tutti gli $n$ elementi memorizzati. La ricerca degrada a una scansione esaustiva di una lista non ordinata: $T(n) = \\Theta(n)$.",
+      invariante: "Invariante di Esplorazione del Bucket:\nAll'inizio di ogni iterazione del ciclo while (riga 3), la chiave $k$ non è presente in alcuno dei nodi che precedono $x$ nella lista concatenata $T[j]$ (ossia nel prefisso già scansionato da `T[j]` fino a `x.prev`).\n[emerald]Inizializzazione[/emerald]: prima della prima iterazione, $x = T[j]$. Il prefisso esaminato è vuoto, pertanto la proprietà è vacuamente verificata.\n[emerald]Conservazione[/emerald]: se la guardia del ciclo while è vera, $x \\ne \\text{NIL}$ e $x.\\text{key} \\ne k$. L'istruzione `x = x.next` sposta il puntatore al successore, incorporando il nodo corrente tra quelli verificati con esito negativo.\n[emerald]Conclusione[/emerald]: il ciclo termina per due possibili motivi:\n1. $x.\\text{key} = k$: la chiave è stata localizzata esattamente nel nodo puntato da $x$.\n2. $x = \\text{NIL}$: l'intera lista $T[j]$ è stata esplorata; l'invariante certifica che la chiave $k$ non appartiene a $T[j]$ e dunque, per le proprietà della funzione deterministica $h$, non è presente nell'intero dizionario.",
+      dimostrazione: "**Analisi sotto l'Ipotesi di Hashing Uniforme e Indipendente (SUHA):**\nAssumiamo che la funzione hash distribuisca le chiavi in modo uniforme e indipendente tra gli $m$ slot con probabilità $1/m$, e che il calcolo di $h(k)$ richieda $\\Theta(1)$. Il fattore di carico medio è $\\alpha = n/m$, che rappresenta il valore atteso della lunghezza di ciascuna lista $E[n_j] = \\alpha$.\n\n**1. Ricerca senza Successo (Unsuccessful Search):** $[\\Theta(1 + \\alpha)]$\nPoiché $k \\notin T$, la funzione hash assegna $k$ a un generico slot $j$ con probabilità $1/m$. L'algoritmo deve scandire l'intera lista $T[j]$ fino alla sentinella `NIL`. Il numero atteso di elementi esaminati coincide con la lunghezza media della lista:\n$$E[T_{\\text{insuccesso}}] = O(1) + E[n_{h(k)}] = O(1) + \\alpha = \\Theta(1 + \\alpha)$$\n\n**2. Ricerca con Successo (Successful Search):** $[\\Theta(1 + \\alpha)]$\nSupponiamo che la chiave cercata sia equiprobabilmente una qualunque delle $n$ chiavi memorizzate. Poiché gli elementi vengono inseriti in testa, il numero di nodi esaminati per trovare la chiave $x_i$ (l'$i$-esimo elemento inserito nella tabella) è pari a $1$ più il numero di elementi inseriti **dopo** $x_i$ che sono collisi nello stesso slot.\nDefiniamo la variabile indicatrice $X_{ij} = I\\{h(k_i) = h(k_j)\\}$ per $i < j$. Per l'ipotesi di uniformità, $E[X_{ij}] = P(h(k_i) = h(k_j)) = 1/m$.\nIl numero medio di elementi esaminati è:\n$$E\\left[\\frac{1}{n} \\sum_{i=1}^n \\left(1 + \\sum_{j=i+1}^n X_{ij}\\right)\\right] = 1 + \\frac{1}{n} \\sum_{i=1}^n \\sum_{j=i+1}^n \\frac{1}{m} = 1 + \\frac{1}{nm} \\sum_{i=1}^n (n - i)$$\nSviluppando la progressione aritmetica $\\sum_{k=1}^{n-1} k = \\frac{n(n - 1)}{2}$:\n$$= 1 + \\frac{1}{nm} \\cdot \\frac{n(n - 1)}{2} = 1 + \\frac{n - 1}{2m} = 1 + \\frac{\\alpha}{2} - \\frac{\\alpha}{2n} = \\Theta(1 + \\alpha)$$\n\n**Conclusioni Asintotiche:**\nSe la dimensione della tabella è proporzionale al numero di elementi memorizzati ($n = O(m)$), allora $\\alpha = O(1)$ e il tempo atteso per qualsiasi ricerca diviene **strettamente costante $\\Theta(1)$**."
+    }
+  },
+  'chained-hash-delete': {
+    titolo: 'CHAINED-HASH-DELETE(T, x)',
+    complessita: 'Θ(1) tempo nel caso peggiore (con puntatore al nodo x)',
+    spazio: 'O(1) ausiliario in-place',
+    tipo: 'Scollegamento puntatori in liste bidirezionali',
+    // Versione 1: Sintetica (Appunti di lezione)
+    righe: [
+      { id: 'CHD-H', num: 'H1', text: '--- CHAINED-HASH-DELETE(T, x) [Appunti] ---' },
+      { id: 'CHD-1', num: 1, text: 'rimuove un elemento x dalla lista T[h(x.key)]' }
+    ],
+    // Versione 2: Procedurale esplicita su liste doppiamente concatenate (CLRS)
+    righeComplete: [
+      { id: 'CHDC-H', num: 'H1', text: '--- CHAINED-HASH-DELETE(T, x) [Procedurale CLRS / Liste Doppie] ---' },
+      { id: 'CHDC-1', num: 1, text: 'if x.prev ≠ NIL' },
+      { id: 'CHDC-2', num: 2, text: '    x.prev.next = x.next   // Bypassa x aggiornando il predecessore' },
+      { id: 'CHDC-3', num: 3, text: 'else T[h(x.key)] = x.next   // Se x era in testa, aggiorna il puntatore di slot' },
+      { id: 'CHDC-4', num: 4, text: 'if x.next ≠ NIL' },
+      { id: 'CHDC-5', num: 5, text: '    x.next.prev = x.prev   // Bypassa x aggiornando il successore' },
+      { id: 'CHDC-6', num: 6, text: 'dealloca(x)                 // Libera la memoria allocata per il record' }
+    ],
+    teoria: {
+      funzionamento: "**Precondizione Fondamentale & Distinzione Concettuale:**\nLa procedura formale `CHAINED-HASH-DELETE` riceve come parametro il puntatore diretto al nodo $x$ da eliminare, e **NON** la sola chiave numerica $k$. Se venisse fornita unicamente la chiave scalare, bisognerebbe preliminarmente invocare `CHAINED-HASH-SEARCH(T, k)` per localizzare l'indirizzo del nodo, assorbendo un tempo atteso di $\\Theta(1 + \\alpha)$ e pessimo di $\\Theta(n)$. Avendo invece a disposizione il riferimento al nodo $x$, l'operazione si riduce alla rimozione locale dell'elemento dalla catena.\n\n**Il Ruolo Cruciale delle Liste Doppiamente Concatenate:**\n1. [cyan]Nelle liste semplicemente concatenate (singly-linked)[/cyan]: per eliminare un nodo $x$ è obbligatorio aggiornare il puntatore `next` del suo predecessore immediato. Poiché il singolo puntatore all'indietro non esiste, l'algoritmo sarebbe forzato a scandire la catena partendo dalla testa per individuare il predecessore, richiedendo tempo lineare rispetto alla lunghezza della lista: $\\Theta(\\text{length}(T[h(x.\\text{key})]))$.\n2. [cyan]Nelle liste doppiamente concatenate (doubly-linked)[/cyan]: ciascun record possiede sia il puntatore `next` che il puntatore `prev`. È possibile accedere istantaneamente al predecessore mediante `x.prev` e al successore mediante `x.next`, completando il bypass e l'estrazione fisica del nodo in tempo rigorosamente costante $\\Theta(1)$ nel caso peggiore.\n\n**Gestione Atomica dei Puntatori di Confine:**\n- [amber]Caso 1 (Nodo in testa)[/amber]: se `x.prev == NIL`, il nodo $x$ è il primo elemento dello slot. L'aggiornamento deve ridefinire direttamente la radice della catena: $T[h(x.\\text{key})] = x.\\text{next}$.\n- [amber]Caso 2 (Nodo intermedio o in coda)[/amber]: se `x.prev != NIL`, si connette `x.prev.next` a `x.next`. Se `x.next != NIL`, si connette `x.next.prev` a `x.prev`.",
+      invariante: "Invariante di Integrità Strutturale:\nSia $j = h(x.\\text{key})$ l'indice dello slot di appartenenza. All'inizio dell'operazione, la catena $T[j]$ è una lista bidirezionale valida contenente il record $x$. Al termine dell'esecuzione delle riassegnazioni di puntatore:\n1. La sequenza dei rimanenti elementi nella lista $T[j]$ preserva l'ordine reciproco precedente senza interruzioni di continuità.\n2. Tutti i puntatori incrociati rimangono consistenti: per qualsiasi nodo residuo $u$, se $u.\\text{next} \\ne \\text{NIL}$ allora $u.\\text{next}.\\text{prev} == u$.\n3. La cardinalità complessiva $n$ del dizionario decrementa esattamente di $1$, aggiornando il fattore di carico a $\\alpha = (n - 1) / m$.",
+      dimostrazione: "**Analisi del Tempo Computazionale nel Caso Peggiore:** $[\\Theta(1)]$\nAssumendo una rappresentazione con liste doppiamente concatenate e disponendo del puntatore diretto al nodo $x$:\n1. La valutazione dell'espressione condizionale `x.prev != NIL` richiede tempo costante $\\Theta(1)$.\n2. L'aggiornamento di `x.prev.next` o di $T[h(x.\\text{key})]$ comporta al più due scritture in memoria ad accesso casuale: $\\Theta(1)$.\n3. L'aggiornamento di `x.next.prev` richiede un singolo assegnamento di puntatore: $\\Theta(1)$.\n4. L'eventuale deallocazione del record avviene in tempo costante di sistema: $\\Theta(1)$.\n$$T_{\\text{delete}}(n) = \\Theta(1) \\quad \\text{in qualsiasi scenario (ottimo, medio, pessimo)}$$\n\n**Confronto Rigoroso tra i Casi d'Uso:**\n- **Delete con puntatore al nodo dato (CLRS standard)**: tempo $\\Theta(1)$ garantito nel caso peggiore.\n- **Delete data solo la chiave scalare $k$**: richiede `CHAINED-HASH-SEARCH` seguita da `CHAINED-HASH-DELETE`. Il tempo complessivo atteso coincide con il tempo della ricerca: $\\Theta(1 + \\alpha)$, con degenerazione a $\\Theta(n)$ nel caso peggiore di collisione totale."
+    }
+  },
+  'hash-insert': {
+    titolo: 'HASH-INSERT(T, k)',
+    complessita: '1/(1 - α) ispezioni attese | Θ(m) caso pessimo',
+    spazio: 'O(1) ausiliario in-place',
+    tipo: 'Indirizzamento aperto (Open Addressing)',
+    // Pseudocodice Lezione 15 (Appunti DMI)
+    righe: [
+      { id: 'HI-H', num: 'H1', text: '--- HASH-INSERT(T, k) ---' },
+      { id: 'HI-1', num: 1, text: 'i = 0' },
+      { id: 'HI-2', num: 2, text: 'repeat' },
+      { id: 'HI-3', num: 3, text: '    j = h(k, i)                     // Calcolo dello slot tramite sequenza di ispezione' },
+      { id: 'HI-4', num: 4, text: '    if (T[j] == NIL or T[j] == DELETED)' },
+      { id: 'HI-5', num: 5, text: '        T[j] = k                    // Inserimento della chiave nello slot libero' },
+      { id: 'HI-6', num: 6, text: '        return j                    // Restituisce l\'indice dello slot occupato' },
+      { id: 'HI-7', num: 7, text: '    else' },
+      { id: 'HI-8', num: 8, text: '        i = i + 1                   // Collisione: avanza al prossimo tentativo' },
+      { id: 'HI-9', num: 9, text: 'until i == m' },
+      { id: 'HI-10', num: 10, text: 'error "hash-table-overflow"        // Tabella satura: tutti gli slot occupati' }
+    ],
+    teoria: {
+      funzionamento: "**Principio Fondamentale dell'Indirizzamento Aperto:**\nA differenza della risoluzione per concatenamento, nell'indirizzamento aperto tutti gli elementi risiedono direttamente all'interno della tabella hash $T[0..m-1]$ senza fare ricorso a liste dinamiche esterne o puntatori ausiliari. Ciascuno slot può ospitare un singolo elemento, il valore sentinella `NIL` (se mai occupato), oppure il marcatore speciale `DELETED`.\n\n**Fattore di Carico & Sequenza di Ispezione (Probing Sequence):**\nPoiché la tabella non può contenere più di $m$ elementi contemporaneamente, il fattore di carico è strettamente vincolato: $\\alpha = n/m \\le 1$. La funzione di hash riceve due argomenti: la chiave $k$ e il contatore dei tentativi $i \\in \\{0, 1, \\dots, m-1\\}$:\n$$h: U \\times \\{0, 1, \\dots, m-1\\} \\rightarrow \\{0, 1, \\dots, m-1\\}$$\nPer garantire che ogni slot venga tentato, la sequenza $\\langle h(k, 0), h(k, 1), \\dots, h(k, m-1) \\rangle$ deve essere una permutazione dell'insieme $\\{0, 1, \\dots, m-1\\}$.\n\n**Gestione delle Collisioni e Stato DELETED:**\n[cyan]Scansione e Inserimento[/cyan]: l'algoritmo valuta progressivamente gli slot $j = h(k, i)$. Se lo slot $j$ contiene `NIL` o `DELETED`, la chiave viene allocata immediatamente in $T[j]$ e la procedura termina restituendo $j$.\n[cyan]Collisione[/cyan]: se lo slot contiene una chiave attiva diversa da $k$, il tentativo corrente fallisce, si incrementa $i$ e si ispeziona lo slot successivo previsto dalla sequenza.\n[cyan]Overflow[/cyan]: se si raggiunge $i = m$ senza riscontrare alcuna cella libera, l'algoritmo solleva un'eccezione di overflow certificando che l'intera tabella è satura.",
+      invariante: "Invariante di Esplorazione degli Slot:\nAll'inizio di ogni iterazione del ciclo repeat-until (riga 2), la chiave $k$ è stata tentata senza successo su tutti gli $i$ slot distinti identificati dal prefisso della sequenza di ispezione $\\langle h(k, 0), h(k, 1), \\dots, h(k, i-1) \\rangle$, e ciascuno di tali slot ospita una chiave valida diversa da $k$ (né `NIL` né `DELETED`).\n[emerald]Inizializzazione[/emerald]: prima della prima iterazione, $i = 0$. Il prefisso dei tentativi è vuoto, pertanto la proprietà è vacuamente verificata.\n[emerald]Conservazione[/emerald]: se il test alla riga 4 fallisce, lo slot $j = h(k, i)$ è attualmente occupato da una chiave esistente. L'incremento $i = i + 1$ (riga 8) estende il prefisso delle celle verificate preservando l'invariante.\n[emerald]Conclusione[/emerald]: il ciclo termina per due ragioni:\n1. Si individua una cella $T[j] \\in \\{\\text{NIL}, \\text{DELETED}\\}$: la chiave viene inserita preservando l'integrità del dizionario.\n2. Si raggiunge $i = m$: per l'invariante, tutti gli $m$ slot della tabella sono stati ispezionati e risultano occupati da chiavi attive; l'errore di tabella satura è formalmente corretto.",
+      dimostrazione: "**Analisi sotto l'Ipotesi di Hashing Uniforme:**\nAssumiamo che la funzione hash generi ciascuna delle $m!$ possibili permutazioni con uguale probabilità $1/m!$ e in modo indipendente per ogni chiave.\n\n**Teorema: Numero Atteso di Ispezioni in una Ricerca senza Successo:**\nIn una tabella con fattore di carico $\\alpha = n/m < 1$, il numero atteso di ispezioni in una ricerca senza successo è al più $\\frac{1}{1 - \\alpha}$.\nSia $X$ la variabile aleatoria indicatrice del numero di ispezioni. Definiamo l'evento $A_j$ = \"il $j$-esimo tentativo accede a uno slot già occupato\". Poiché la tabella contiene $n$ elementi su $m$ slot, la probabilità che i primi $i-1$ tentativi incontrino celle occupate è:\n$$P(X \\ge i) = P(A_1 \\cap A_2 \\cap \\dots \\cap A_{i-1}) = \\frac{n}{m} \\cdot \\frac{n - 1}{m - 1} \\cdots \\frac{n - (i - 2)}{m - (i - 2)}$$\nPoiché $\\frac{n - k}{m - k} \\le \\frac{n}{m} = \\alpha$ per ogni $k \\ge 0$, otteniamo $P(X \\ge i) \\le \\alpha^{i-1}$.\nApplicando la formula del valore atteso per variabili a valori interi positivi:\n$$E[X] = \\sum_{i=1}^{m} P(X \\ge i) \\le \\sum_{i=1}^{\\infty} \\alpha^{i-1} = \\sum_{k=0}^{\\infty} \\alpha^k = \\frac{1}{1 - \\alpha}$$\n\n**Corollario: Costo Computazionale dell'Inserimento:**\nL'operazione `HASH-INSERT(T, k)` richiede una ricerca senza successo per localizzare la prima cella libera (`NIL` o `DELETED`), seguita da una singola scrittura in memoria $O(1)$. Il numero atteso di ispezioni è pertanto limitato superiormente da:\n$$E[T_{\\text{insert}}] \\le \\frac{1}{1 - \\alpha} = O(1) \\quad \\text{per qualsiasi } \\alpha \\text{ costante strettamente minore di } 1$$\nAd esempio, con tabella mezza piena ($\\alpha = 0.5$), il numero atteso di ispezioni è $\\le 2$; con tabella piena al $90\\%$ ($\\alpha = 0.9$), il costo medio atteso è al più $10$ ispezioni."
+    }
+  },
+  'hash-search': {
+    titolo: 'HASH-SEARCH(T, k)',
+    complessita: '(1/α) ln(1/(1 - α)) ispezioni attese | Θ(m) caso pessimo',
+    spazio: 'O(1) ausiliario in-place',
+    tipo: 'Ricerca con sequenza di ispezione (Open Addressing)',
+    // Pseudocodice Lezione 15 (Appunti DMI)
+    righe: [
+      { id: 'HS-H', num: 'H1', text: '--- HASH-SEARCH(T, k) ---' },
+      { id: 'HS-1', num: 1, text: 'i = 0' },
+      { id: 'HS-2', num: 2, text: 'repeat' },
+      { id: 'HS-3', num: 3, text: '    j = h(k, i)                     // Calcolo dello slot tramite sequenza di ispezione' },
+      { id: 'HS-4', num: 4, text: '    if (T[j] == k)' },
+      { id: 'HS-5', num: 5, text: '        return j                    // Elemento trovato: restituisce l\'indice dello slot' },
+      { id: 'HS-6', num: 6, text: '    else' },
+      { id: 'HS-7', num: 7, text: '        i = i + 1                   // Avanzamento: scavalca mismatch e celle DELETED' },
+      { id: 'HS-8', num: 8, text: 'until T[j] == NIL or i == m' },
+      { id: 'HS-9', num: 9, text: 'return NIL                          // Elemento non presente nel dizionario' }
+    ],
+    teoria: {
+      funzionamento: "**Meccanica della Ricerca a Indirizzamento Aperto:**\nLa procedura `HASH-SEARCH(T, k)` ripercorre esattamente la medesima sequenza di ispezione $\\langle h(k, 0), h(k, 1), \\dots, h(k, m-1) \\rangle$ utilizzata durante l'inserimento della chiave target $k$. L'algoritmo valuta la cella $T[j]$ con $j = h(k, i)$ per valori crescenti del contatore dei tentativi $i = 0, 1, \\dots, m-1$.\n\n**Gestione dei Tre Stati di Cella:**\n1. [cyan]Match con Successo ($T[j] == k$)[/cyan]: la chiave target viene localizzata. L'algoritmo termina immediatamente restituendo l'indice $j$ dello slot.\n2. [amber]Cella Occupata o Marcata DELETED ($T[j] \\ne k$ e $T[j] \\ne \\text{NIL}$)[/amber]: se la cella contiene un'altra chiave attiva o il marcatore speciale `DELETED`, l'algoritmo non può concludere che la chiave non esista. Deve **scavalcare** lo slot incrementando il contatore $i = i + 1$ e procedendo al tentativo successivo.\n3. [emerald]Insuccesso Certificato ($T[j] == \\text{NIL}$)[/emerald]: l'incontro con una cella mai occupata (`NIL`) certifica in modo deterministico che $k \\notin T$. Se la chiave fosse stata inserita in precedenza, avrebbe occupato esattamente questo slot libero anziché proseguire oltre nella sequenza. La ricerca si arresta restituendo `NIL`.\n\n**Degenerazione nel Caso Pessimo:** $[\\Theta(m)]$\nSe la tabella è quasi satura o presenta lunghe sequenze di celle occupate o `DELETED`, l'algoritmo potrebbe dover ispezionare tutti gli $m$ slot prima di restituire `NIL`: $T(m) = \\Theta(m)$.",
+      invariante: "Invariante di Esplorazione della Sequenza di Probing:\nAll'inizio di ogni iterazione del ciclo repeat-until (riga 2), la chiave target $k$ non risiede in alcuno degli $i$ slot esaminati precedentemente, ovvero in $\\{T[h(k, 0)], T[h(k, 1)], \\dots, T[h(k, i-1)]\\}$, e nessuno di tali slot ospitava il valore `NIL` al momento della verifica.\n[emerald]Inizializzazione[/emerald]: prima della prima iterazione, $i = 0$. Il prefisso degli slot esaminati è vuoto, quindi la proprietà è banalmente verificata.\n[emerald]Conservazione[/emerald]: se il controllo alla riga 4 fallisce, lo slot corrente $T[j]$ contiene una chiave diversa da $k$ oppure il marcatore `DELETED`. L'incremento $i = i + 1$ preserva l'invariante per l'iterazione successiva.\n[emerald]Conclusione[/emerald]: il ciclo termina per due condizioni:\n1. $T[j] == k$: la chiave è stata reperita con successo nello slot $j$.\n2. $T[j] == \\text{NIL}$ oppure $i == m$: nel primo caso, la presenza di una cella vergine certifica che $k$ non è mai stata inserita; nel secondo caso, l'intera tabella è stata ispezionata. L'invariante garantisce che la restituzione di `NIL` è corretta.",
+      dimostrazione: "**Analisi sotto l'Ipotesi di Hashing Uniforme (SUHA con Permutazioni):**\nAssumiamo che ogni chiave abbia la stessa probabilità $1/n$ di essere ricercata e che non siano state eseguite cancellazioni che degradino le catene di ispezione.\n\n**Teorema: Numero Atteso di Ispezioni in una Ricerca con Successo:**\nIn una tabella hash a indirizzamento aperto con fattore di carico $\\alpha = n/m < 1$, il numero atteso di ispezioni in una ricerca con successo è al più:\n$$E[T_{\\text{successo}}] \\le \\frac{1}{\\alpha} \\ln \\frac{1}{1 - \\alpha}$$\n**Dimostrazione Formale:**\nLa ricerca di una generica chiave $k$ riproduce esattamente la medesima sequenza di tentativi effettuata al momento del suo inserimento nella tabella. Se $k$ è stata la $(i+1)$-esima chiave memorizzata nel dizionario (per $i = 0, 1, \\dots, n-1$), al momento del suo inserimento il fattore di carico della tabella era pari a $i/m$.\nPer il corollario sulla ricerca senza successo, il numero atteso di ispezioni necessarie a inserire la $(i+1)$-esima chiave era limitato da:\n$$E[\\text{ispezioni per la } (i+1)\\text{-esima chiave}] \\le \\frac{1}{1 - \\frac{i}{m}} = \\frac{m}{m - i}$$\nPoiché ciascuna delle $n$ chiavi memorizzate ha equiprobabilità $1/n$ di essere la chiave cercata, il tempo atteso complessivo è la media aritmetica sui costi dei singoli inserimenti:\n$$E[T_{\\text{successo}}] = \\sum_{i=0}^{n-1} \\frac{1}{n} \\cdot \\frac{m}{m - i} = \\frac{m}{n} \\sum_{i=0}^{n-1} \\frac{1}{m - i} = \\frac{1}{\\alpha} \\sum_{k=m-n+1}^{m} \\frac{1}{k}$$\nApplicando la disuguaglianza integrale per somme armoniche decrescenti $\\sum_{k=a}^b \\frac{1}{k} \\le \\int_{a-1}^b \\frac{1}{x} dx$ con estremi $a = m - n + 1$ e $b = m$:\n$$\\le \\frac{1}{\\alpha} \\int_{m-n}^{m} \\frac{1}{x} dx = \\frac{1}{\\alpha} \\left[ \\ln x \\right]_{m-n}^m = \\frac{1}{\\alpha} (\\ln m - \\ln(m - n)) = \\frac{1}{\\alpha} \\ln \\frac{m}{m - n} = \\frac{1}{\\alpha} \\ln \\frac{1}{1 - \\alpha}$$\n\n**Esempi Numerici Pratici:**\n- Con tabella mezza piena ($\\alpha = 0.5$): il numero atteso di ispezioni è $\\le \\frac{1}{0.5} \\ln(2) \\approx 2 \\cdot 0.693 = 1.387$.\n- Con tabella piena al $90\\%$ ($\\alpha = 0.9$): il numero atteso di ispezioni è $\\le \\frac{1}{0.9} \\ln(10) \\approx 1.111 \\cdot 2.302 = 2.559$.\nAnche con carico molto elevato, una ricerca con successo richiede in media meno di 3 ispezioni."
+    }
+  },
+  'hash-delete': {
+    titolo: 'HASH-DELETE(T, k)',
+    complessita: '(1/α) ln(1/(1 - α)) ispezioni attese | Θ(m) caso pessimo',
+    spazio: 'O(1) ausiliario in-place',
+    tipo: 'Cancellazione con marcatore speciale (Open Addressing)',
+    // Pseudocodice procedurale (Lezione 15 Appunti DMI)
+    righe: [
+      { id: 'HD-H', num: 'H1', text: '--- HASH-DELETE(T, k) ---' },
+      { id: 'HD-1', num: 1, text: 'i = 0' },
+      { id: 'HD-2', num: 2, text: 'repeat' },
+      { id: 'HD-3', num: 3, text: '    j = h(k, i)                     // Calcolo dello slot tramite sequenza di ispezione' },
+      { id: 'HD-4', num: 4, text: '    if (T[j] == k)' },
+      { id: 'HD-5', num: 5, text: '        T[j] = DELETED              // Marcatura speciale per non interrompere le catene' },
+      { id: 'HD-6', num: 6, text: '        return j                    // Restituisce l\'indice dello slot liberato' },
+      { id: 'HD-7', num: 7, text: '    else' },
+      { id: 'HD-8', num: 8, text: '        i = i + 1                   // Scavalca mismatch e celle DELETED pregresse' },
+      { id: 'HD-9', num: 9, text: 'until T[j] == NIL or i == m' },
+      { id: 'HD-10', num: 10, text: 'error "chiave non presente"       // Raggiunto NIL o esaurita la tabella' }
+    ],
+    teoria: {
+      funzionamento: "**La Sottigliezza Critica della Cancellazione nell'Indirizzamento Aperto:**\nNell'indirizzamento aperto non è consentito cancellare una chiave impostando semplicemente la cella a `NIL`. Se lo facessimo, intaccheremmo irreversibilmente la sequenza di ispezione di altre chiavi inserite successivamente che hanno subito collisione su quello stesso slot. Infatti, la procedura `HASH-SEARCH` arresta immediatamente la propria scansione non appena incontra un valore `NIL`, interpretandolo come garanzia che la chiave cercata non sia mai stata inserita: la ricerca per tali elementi collisi fallirebbe erroneamente in anticipo.\n\n**Il Valore Speciale DELETED (Tombstone):**\nPer preservare l'integrità strutturale dell'intera tabella, il nodo eliminato viene contrassegnato con la costante speciale `DELETED`:\n- [cyan]Comportamento in HASH-INSERT[/cyan]: considera lo slot marcato `DELETED` alla stregua di una cella libera e vi può sovrascrivere una nuova chiave, riutilizzando lo spazio.\n- [amber]Comportamento in HASH-SEARCH[/amber]: non arresta la scansione; **scavalca** lo slot `DELETED` proseguendo lungo la sequenza di probing fino a trovare la chiave target o un effettivo `NIL`.\n- [emerald]Comportamento in HASH-DELETE[/emerald]: ricerca la chiave target $k$ lungo la sequenza di ispezione; non appena localizzata in $T[j]$, assegna $T[j] = \\text{DELETED}$ e decrementa il numero di elementi attivi $n$.\n\n**Degradazione Asintotica (Accumulo di DELETED):**\nL'accumulo progressivo di celle `DELETED` degrada le prestazioni temporali del dizionario. Il tempo di ricerca e cancellazione cessa di dipendere dal solo fattore di carico reale $\\alpha = n/m$, iniziando a dipendere anche dalla somma degli elementi attivi e di quelli cancellati. Se le cancellazioni sono molto frequenti, la scansione media si avvicina al caso pessimo $\\Theta(m)$, rendendo preferibile la riorganizzazione periodica della tabella (re-hashing completo) o la risoluzione per concatenamento.",
+      invariante: "Invariante di Tracciamento della Rimozione:\nAll'inizio di ogni iterazione del ciclo repeat-until (riga 2), la chiave target $k$ non risiede in alcuno degli $i$ slot esaminati precedentemente $\\{T[h(k, 0)], T[h(k, 1)], \\dots, T[h(k, i-1)]\\}$, e nessuno di tali slot ospitava `NIL` al momento della verifica.\n[emerald]Inizializzazione[/emerald]: per $i = 0$, il prefisso ispezionato è vuoto e la proprietà è vacuamente verificata.\n[emerald]Conservazione[/emerald]: se $T[j] \\ne k$, lo slot contiene una chiave attiva differente o il valore `DELETED`. L'istruzione $i = i + 1$ preserva l'invariante estendendo il prefisso di ricerca.\n[emerald]Conclusione[/emerald]: il ciclo termina per localizzazione positiva ($T[j] == k$, marcatura a `DELETED`), oppure per arresto negativo ($T[j] == \\text{NIL}$ o $i == m$). In quest'ultimo caso, l'invariante certifica che la chiave $k$ non appartiene al dizionario.",
+      dimostrazione: "**Analisi del Costo Computazionale:**\nL'operazione `HASH-DELETE(T, k)` si articola formalmente in due sotto-fasi:\n1. Esecuzione di una procedura di ricerca della chiave target $k$ identica a `HASH-SEARCH`.\n2. Singola scrittura in memoria $T[j] = \\text{DELETED}$ che richiede tempo strettamente costante $O(1)$.\n\n**Complessità Media Attesa:**\nAssumendo un hashing di permutazione uniforme e indipendente, il tempo atteso per cancellare una chiave presente coincide con il costo atteso di una ricerca con successo su una tabella con fattore di carico effettivo $\\alpha = n/m < 1$:\n$$E[T_{\\text{delete}}] = E[T_{\\text{search}}] + O(1) \\le \\frac{1}{\\alpha} \\ln \\frac{1}{1 - \\alpha} + O(1) = O(1)$$\nSe la chiave non è presente, il tempo atteso coincide con quello di una ricerca senza successo, limitato superiormente da $\\frac{1}{1 - \\alpha}$.\n\n**Caso Pessimo:** $[\\Theta(m)]$\nSe tutti gli slot contengono elementi attivi o marcatori `DELETED` e la chiave cercata risiede nell'ultimo slot della sequenza o è assente, l'algoritmo deve valutare tutti gli $m$ tentativi prima di arrestarsi."
+    }
+  },
+
+  // ==========================================
+  // MODULO 05: TABELLE HASH
+  // ==========================================
+  'left-rotate': {
+    titolo: 'LEFT-ROTATE(T, x)',
+    complessita: 'Θ(1) tempo nel caso peggiore',
+    spazio: 'O(1) ausiliario in-place',
+    tipo: 'Operazione di rotazione locale (Alberi Rosso-Neri)',
+    // Pseudocodice procedurale (Lezione 16 Appunti DMI)
+    righe: [
+      { id: 'LR-H', num: 'H1', text: '--- LEFT-ROTATE(T, x) ---' },
+      { id: 'LR-1', num: 1, text: 'y = x.right                     // y diventa il perno della rotazione' },
+      { id: 'LR-2', num: 2, text: 'x.right = y.left                // Trasforma il sottoalbero sx di y nel dx di x (Fase 1)' },
+      { id: 'LR-3', num: 3, text: 'if (y.left ≠ T.nil)' },
+      { id: 'LR-4', num: 4, text: '    y.left.p = x                // Aggiorna il puntatore al genitore di β' },
+      { id: 'LR-5', num: 5, text: 'y.p = x.p                       // Collega il genitore di x a y (Fase 2)' },
+      { id: 'LR-6', num: 6, text: 'if (x.p == T.nil)' },
+      { id: 'LR-7', num: 7, text: '    T.root = y                  // Se x era la radice, y diventa la nuova radice' },
+      { id: 'LR-8', num: 8, text: 'else if (x == x.p.left)' },
+      { id: 'LR-9', num: 9, text: '    x.p.left = y                // Se x era figlio sinistro, connette y a sinistra' },
+      { id: 'LR-10', num: 10, text: 'else x.p.right = y            // Se x era figlio destro, connette y a destra' },
+      { id: 'LR-11', num: 11, text: 'y.left = x                    // Pone x a sinistra di y (Fase 3)' },
+      { id: 'LR-12', num: 12, text: 'x.p = y                       // Imposta y come nuovo genitore di x' }
+    ],
+    teoria: {
+      funzionamento: "**Precondizione e Ruolo Strutturale:**\nLa rotazione sinistra `LEFT-ROTATE` assume la precondizione vincolante che il figlio destro di $x$ non sia la sentinella: $x.\\text{right} \\ne T.\\text{nil}$. È un'operazione locale fondamentale nei processi di bilanciamento post-inserimento (`RB-INSERT-FIXUP`) e post-cancellazione (`RB-DELETE-FIXUP`), progettata per diminuire la profondità del sottoalbero destro di $x$ aumentandone la sinistra, senza violare la proprietà dell'albero binario di ricerca (BST).\n\n**Meccanica Operativa in 3 Fasi Atomiche:**\n1. [cyan]Fase 1 (Trasferimento sottoalbero interno $\\beta$)[/cyan]: il sottoalbero sinistro di $y$ (denotato $\\beta$) viene agganciato come figlio destro di $x$ (`x.right = y.left`). Se $\\beta \\ne T.\\text{nil}$, il suo genitore diventa $x$.\n2. [amber]Fase 2 (Aggiornamento del genitore comune)[/amber]: il puntatore del genitore di $x$ viene trasferito a $y$ (`y.p = x.p`). Se $x$ era la radice dell'albero (`x.p == T.nil`), $y$ diventa la nuova radice $T.\\text{root}$; altrimenti si aggiorna il puntatore corrispondente del genitore (`left` o `right`).\n3. [emerald]Fase 3 (Riassegnazione reciproca tra perni)[/emerald]: $x$ viene posizionato come figlio sinistro di $y$ (`y.left = x`), e $y$ diventa il genitore diretto di $x$ (`x.p = y`).\n\n**Gestione delle Sentinelle ($T.\\text{nil}$):**\nTutte le foglie dell'albero rosso-nero e il genitore della radice puntano all'oggetto condiviso $T.\\text{nil}$, che ha colore rigorosamente NERO. Questo evita controlli espliciti di puntatori nulli (`NULL`), trattando uniformemente ogni nodo terminale.",
+      invariante: "Invariante di Ordinamento BST (Binary Search Tree):\nSiano $\\alpha$, $\\beta$, $\\gamma$ i sottoalberi radicati rispettivamente a sinistra di $x$, tra $x$ e $y$ (sinistra di $y$), e a destra di $y$. Prima dell'esecuzione della rotazione, per la proprietà di albero binario di ricerca vale la disuguaglianza fondamentale:\n$$\\forall u \\in \\alpha, \\; \\forall v \\in \\beta, \\; \\forall w \\in \\gamma \\implies u.\\text{key} \\le x.\\text{key} \\le v.\\text{key} \\le y.\\text{key} \\le w.\\text{key}$$\nAl termine dell'aggiornamento dei puntatori:\n1. $\\alpha$ rimane sottoalbero sinistro di $x$, quindi le chiavi in $\\alpha$ sono $\\le x.\\text{key}$.\n2. $\\beta$ diventa sottoalbero destro di $x$, quindi le chiavi in $\\beta$ sono $\\ge x.\\text{key}$, ma poiché $x$ è a sinistra di $y$, rimangono $\\le y.\\text{key}$.\n3. $\\gamma$ rimane sottoalbero destro di $y$, quindi le chiavi in $\\gamma$ sono $\\ge y.\\text{key}$.\nL'ordine simmetrico tra tutte le chiavi del dizionario viene pertanto preservato senza alcuna alterazione.",
+      dimostrazione: "**Analisi del Costo Computazionale:** $[\\Theta(1)]$\nL'algoritmo esegue un numero finito e predeterminato di letture e scritture di puntatori ad accesso casuale:\n1. Assegnazione di `y` e aggiornamento di `x.right`: 2 operazioni di memoria: $O(1)$.\n2. Eventuale aggiornamento di `y.left.p`: al più 1 scrittura: $O(1)$.\n3. Aggiornamento di `y.p` e del puntatore del genitore di $x$ ($T.\\text{root}$, `left` o `right`): al più 2 scritture: $O(1)$.\n4. Riassegnazione di `y.left` e `x.p`: esattamente 2 scritture: $O(1)$.\nIn totale vengono eseguite al più 6 riassegnazioni di puntatori in memoria RAM, non dipendenti dall'altezza $h$ dell'albero né dal numero complessivo $n$ di nodi memorizzati.\n$$T_{\\text{left-rotate}}(n) = \\Theta(1) \\quad \\text{in qualsiasi scenario (migliore, medio, peggiore)}$$"
+    }
+  },
+  'right-rotate': {
+    titolo: 'RIGHT-ROTATE(T, x)',
+    complessita: 'Θ(1) tempo nel caso peggiore',
+    spazio: 'O(1) ausiliario in-place',
+    tipo: 'Operazione di rotazione locale simmetrica (Alberi Rosso-Neri)',
+    // Pseudocodice simmetrico e duale di LEFT-ROTATE (CLRS / Lez. 16)
+    righe: [
+      { id: 'RR-H', num: 'H1', text: '--- RIGHT-ROTATE(T, x) [Duale Simmetrico] ---' },
+      { id: 'RR-1', num: 1, text: 'y = x.left                      // y diventa il perno della rotazione (figlio sx di x)' },
+      { id: 'RR-2', num: 2, text: 'x.left = y.right                 // Trasforma il sottoalbero dx di y nel sx di x (Fase 1)' },
+      { id: 'RR-3', num: 3, text: 'if (y.right ≠ T.nil)' },
+      { id: 'RR-4', num: 4, text: '    y.right.p = x                // Aggiorna il puntatore al genitore di β' },
+      { id: 'RR-5', num: 5, text: 'y.p = x.p                        // Collega il genitore di x a y (Fase 2)' },
+      { id: 'RR-6', num: 6, text: 'if (x.p == T.nil)' },
+      { id: 'RR-7', num: 7, text: '    T.root = y                   // Se x era la radice, y diventa la nuova radice' },
+      { id: 'RR-8', num: 8, text: 'else if (x == x.p.right)' },
+      { id: 'RR-9', num: 9, text: '    x.p.right = y                // Se x era figlio destro, connette y a destra' },
+      { id: 'RR-10', num: 10, text: 'else x.p.left = y             // Se x era figlio sinistro, connette y a sinistra' },
+      { id: 'RR-11', num: 11, text: 'y.right = x                    // Pone x a destra di y (Fase 3)' },
+      { id: 'RR-12', num: 12, text: 'x.p = y                        // Imposta y come nuovo genitore di x' }
+    ],
+    teoria: {
+      funzionamento: "**Precondizione & Dualità Strutturale:**\nLa procedura `RIGHT-ROTATE` richiede la precondizione vincolante che il figlio sinistro del perno $x$ esista: $x.\\text{left} \\ne T.\\text{nil}$. È l'operazione speculare e inversa di `LEFT-ROTATE`: se si esegue una rotazione sinistra su un nodo $x$ ottenendo $y$ come nuova radice locale, una successiva rotazione destra su $y$ ripristina la configurazione di partenza.\n\n**Meccanica Operativa in 3 Fasi Atomiche:**\n1. [cyan]Fase 1 (Trasferimento sottoalbero interno $\\beta$)[/cyan]: il sottoalbero destro di $y$ (denotato $\\beta$) viene staccato da $y$ e agganciato come figlio sinistro di $x$ (`x.left = y.right`). Se $\\beta \\ne T.\\text{nil}$, il suo genitore diventa $x$.\n2. [amber]Fase 2 (Aggiornamento del genitore comune)[/amber]: il puntatore al genitore di $x$ viene trasferito a $y$ (`y.p = x.p`). Se $x$ era la radice dell'albero (`x.p == T.nil`), $y$ diventa la nuova radice $T.\\text{root}$; altrimenti si aggiorna il puntatore del genitore di $x$ (`left` o `right`).\n3. [emerald]Fase 3 (Riassegnazione reciproca tra perni)[/emerald]: $x$ viene collocato come figlio destro di $y$ (`y.right = x`), e $y$ diventa il genitore diretto di $x$ (`x.p = y`).\n\n**Proprietà Topologica:**\nLa rotazione destra riduce di $1$ l'altezza del sottoalbero sinistro di $x$ e aumenta di $1$ quella del sottoalbero destro, modificando la struttura senza alterare in alcun modo l'ordinamento simmetrico delle chiavi (invariante BST).",
+      invariante: "Invariante di Ordinamento BST (Binary Search Tree):\nSiano $\\alpha$, $\\beta$, $\\gamma$ i tre sottoalberi radicati rispettivamente a sinistra di $y$, tra $y$ e $x$ (destra di $y$), e a destra di $x$. Prima dell'esecuzione della rotazione vale la relazione d'ordine:\n$$\\forall u \\in \\alpha, \\; \\forall v \\in \\beta, \\; \\forall w \\in \\gamma \\implies u.\\text{key} \\le y.\\text{key} \\le v.\\text{key} \\le x.\\text{key} \\le w.\\text{key}$$\nAl termine dell'aggiornamento dei puntatori:\n1. $\\alpha$ rimane sottoalbero sinistro di $y$, dunque le sue chiavi restano $\\le y.\\text{key}$.\n2. $\\beta$ diventa sottoalbero sinistro di $x$, dunque le sue chiavi restano $\\le x.\\text{key}$, ma trovandosi $x$ a destra di $y$ restano anche $\\ge y.\\text{key}$.\n3. $\\gamma$ rimane sottoalbero destro di $x$, dunque le sue chiavi restano $\\ge x.\\text{key}$.\nL'ordine delle chiavi dell'albero binario di ricerca rimane rigorosamente invariato.",
+      dimostrazione: "**Analisi del Costo Computazionale:** $[\\Theta(1)]$\nAnalogamente a `LEFT-ROTATE`, l'operazione consiste esclusivamente in un numero costante e predeterminato di letture e scritture di puntatori in memoria ad accesso casuale:\n1. Assegnazione di `y` e aggiornamento di `x.left`: 2 operazioni: $O(1)$.\n2. Eventuale aggiornamento di `y.right.p`: al più 1 scrittura: $O(1)$.\n3. Aggiornamento di `y.p` e del puntatore del genitore di $x$ ($T.\\text{root}$, `left` o `right`): al più 2 scritture: $O(1)$.\n4. Riassegnazione di `y.right` e `x.p`: esattamente 2 scritture: $O(1)$.\nL'algoritmo effettua complessivamente al più 6 aggiornamenti di puntatori in memoria RAM, garantendo un tempo di esecuzione rigorosamente indipendente dall'altezza $h$ dell'albero e dal numero di nodi $n$.\n$$T_{\\text{right-rotate}}(n) = \\Theta(1) \\quad \\text{in qualsiasi scenario (ottimo, medio, pessimo)}$$"
+    }
+  },
 };

@@ -185,68 +185,68 @@ export default function BucketSortApp({ setRigaAttiva }) {
       display: 'flex',
       flexDirection: 'column'
     }}>
-      {/* Header Visualizer compatto */}
+      {/* Header Visualizer standard */}
       <div style={{
         backgroundColor: '#0f172a',
         borderBottom: '1px solid #1e293b',
-        padding: '10px 18px',
+        padding: '14px 20px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         flexWrap: 'wrap',
-        gap: '10px',
+        gap: '12px',
         flexShrink: 0
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#38bdf8' }} />
-            <h2 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: '#f8fafc' }}>
+            <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#f8fafc' }}>
               BUCKET-SORT Visualizer
             </h2>
           </div>
-          <p style={{ margin: '2px 0 0 0', fontSize: '0.75rem', color: '#94a3b8', textAlign: 'left' }}>
+          <p style={{ margin: '3px 0 0 0', fontSize: '0.78rem', color: '#94a3b8', textAlign: 'left' }}>
             Distribuzione uniforme e ordinamento locale dei bucket in tempo atteso Θ(n)
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '6px' }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <button 
             onClick={handleRandomize} 
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '5px',
+              gap: '6px',
               backgroundColor: '#1e293b',
               color: '#cbd5e1',
               border: '1px solid #334155',
-              padding: '6px 11px',
-              borderRadius: '7px',
+              padding: '7px 12px',
+              borderRadius: '8px',
               cursor: 'pointer',
               fontWeight: 600,
-              fontSize: '0.78rem',
+              fontSize: '0.8rem',
               transition: 'all 0.15s ease'
             }}
           >
-            <Shuffle size={13} /> Casuale
+            <Shuffle size={14} /> Casuale
           </button>
           <button 
             onClick={reset} 
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '5px',
+              gap: '6px',
               backgroundColor: '#1e293b',
               color: '#cbd5e1',
               border: '1px solid #334155',
-              padding: '6px 11px',
-              borderRadius: '7px',
+              padding: '7px 12px',
+              borderRadius: '8px',
               cursor: 'pointer',
               fontWeight: 600,
-              fontSize: '0.78rem',
+              fontSize: '0.8rem',
               transition: 'all 0.15s ease'
             }}
           >
-            <RotateCcw size={13} /> Reset
+            <RotateCcw size={14} /> Reset
           </button>
           <button 
             onClick={nextStep} 
@@ -254,36 +254,36 @@ export default function BucketSortApp({ setRigaAttiva }) {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '5px',
+              gap: '6px',
               backgroundColor: isDone ? '#334155' : '#0284c7',
               color: '#ffffff',
               border: 'none',
-              padding: '6px 14px',
-              borderRadius: '7px',
+              padding: '7px 16px',
+              borderRadius: '8px',
               cursor: isDone ? 'not-allowed' : 'pointer',
               fontWeight: 700,
-              fontSize: '0.78rem',
-              boxShadow: isDone ? 'none' : '0 0 12px rgba(2, 132, 199, 0.45)',
+              fontSize: '0.8rem',
+              boxShadow: isDone ? 'none' : '0 0 14px rgba(2, 132, 199, 0.45)',
               transition: 'all 0.15s ease'
             }}
           >
-            {isDone ? <CheckCircle2 size={14} /> : <Play size={14} />}
+            {isDone ? <CheckCircle2 size={15} /> : <Play size={15} />}
             {isDone ? 'Ordinato' : 'Prossimo Passo'}
           </button>
         </div>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'row', flex: 1, minHeight: 0 }}>
-        {/* Pannello sinistro: Array A e Contenitori Bucket ottimizzati verticalmente */}
-        <div style={{ flex: '1 1 58%', padding: '14px 18px', backgroundColor: '#090d16', borderRight: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '10px', overflowY: 'auto', textAlign: 'left' }} className="custom-scrollbar">
+        {/* Pannello sinistro: Array A e Contenitori Bucket */}
+        <div style={{ flex: '1 1 58%', padding: '18px', backgroundColor: '#090d16', borderRight: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '16px', overflowY: 'auto', textAlign: 'left' }} className="custom-scrollbar">
           
-          {/* Badge Fase Attuale compatto */}
+          {/* Badge Fase Attuale */}
           <div style={{
             backgroundColor: 'rgba(2, 132, 199, 0.15)',
             border: '1px solid rgba(56, 189, 248, 0.25)',
-            padding: '5px 10px',
-            borderRadius: '6px',
-            fontSize: '0.72rem',
+            padding: '8px 12px',
+            borderRadius: '8px',
+            fontSize: '0.76rem',
             fontWeight: 800,
             color: '#38bdf8',
             letterSpacing: '0.04em'
@@ -291,12 +291,12 @@ export default function BucketSortApp({ setRigaAttiva }) {
             {currentTrace.phase || 'STATO INIZIALE: PRONTO'}
           </div>
 
-          {/* Array Input / Output */}
+          {/* Array Input / Output A con celle allargate (width: 48px) */}
           <div>
-            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#64748b', letterSpacing: '0.05em', display: 'block', textAlign: 'left' }}>
-              STATO ARRAY A (INDIRIZZAMENTO 1-BASED)
+            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#64748b', letterSpacing: '0.06em', display: 'block', textAlign: 'left' }}>
+              STATO ARRAY A (INDIRIZZAMENTO 1-BASED, LUNGHEZZA n={A.length})
             </span>
-            <div style={{ display: 'flex', gap: '6px', marginTop: '6px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
               {A.map((val, idx) => {
                 const isHighlight = currentTrace.highlightA === idx;
                 
@@ -307,25 +307,25 @@ export default function BucketSortApp({ setRigaAttiva }) {
 
                 return (
                   <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.65rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '2px' }}>idx={idx + 1}</span>
+                    <span style={{ fontSize: '0.68rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '3px' }}>idx={idx + 1}</span>
                     <div style={{
-                      width: '44px',
-                      height: '36px',
+                      width: '48px',
+                      height: '40px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       backgroundColor: bg,
                       border: `2px solid ${border}`,
-                      borderRadius: '7px',
+                      borderRadius: '8px',
                       fontWeight: 800,
-                      fontSize: '0.85rem',
+                      fontSize: '0.86rem',
                       fontFamily: 'monospace',
                       color: color,
                       boxShadow: shadow,
-                      transform: isHighlight ? 'scale(1.06)' : 'scale(1)',
-                      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                      transform: isHighlight ? 'scale(1.08)' : 'scale(1)',
+                      transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
                     }}>
-                      {val}
+                      {val.toFixed(2)}
                     </div>
                   </div>
                 );
@@ -333,12 +333,12 @@ export default function BucketSortApp({ setRigaAttiva }) {
             </div>
           </div>
 
-          {/* I 5 Bucket snelli e proporzionati */}
+          {/* I 5 Bucket: Righe snelle per preservare la verticalità */}
           <div>
-            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#64748b', letterSpacing: '0.05em', display: 'block', textAlign: 'left' }}>
+            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#64748b', letterSpacing: '0.06em', display: 'block', textAlign: 'left' }}>
               I CONTENITORI (BUCKET B[0..4])
             </span>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '6px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '8px' }}>
               {buckets.map((bList, bIdx) => {
                 const isHighlight = currentTrace.highlightBucket === bIdx;
                 
@@ -350,33 +350,63 @@ export default function BucketSortApp({ setRigaAttiva }) {
                   <div key={bIdx} style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px',
-                    padding: '5px 10px',
+                    gap: '8px',
+                    padding: '4px 8px',
+                    minHeight: '32px',
                     backgroundColor: bBg,
                     border: `1px solid ${bBorder}`,
-                    borderRadius: '7px',
+                    borderRadius: '6px',
                     boxShadow: bShadow,
-                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                    transition: 'all 0.18s ease'
                   }}>
-                    <span style={{ fontSize: '0.72rem', fontFamily: 'monospace', fontWeight: 800, color: '#38bdf8', width: '130px', flexShrink: 0 }}>
-                      B[{bIdx}] [{(bIdx * 0.2).toFixed(1)}..{((bIdx + 1) * 0.2).toFixed(1)}):
-                    </span>
-                    <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+                    {/* Badge Bucket Compatto */}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      backgroundColor: isHighlight ? '#0284c7' : '#111827',
+                      border: '1px solid #334155',
+                      borderRadius: '4px',
+                      padding: '2px 6px',
+                      color: isHighlight ? '#ffffff' : '#38bdf8',
+                      fontSize: '0.7rem',
+                      fontWeight: 800,
+                      fontFamily: 'monospace',
+                      flexShrink: 0
+                    }}>
+                      <span>B[{bIdx}]</span>
+                      <span style={{
+                        fontSize: '0.6rem',
+                        color: isHighlight ? '#e0f2fe' : '#64748b',
+                        backgroundColor: 'rgba(0,0,0,0.25)',
+                        padding: '1px 3px',
+                        borderRadius: '3px'
+                      }}>
+                        [{(bIdx * 0.2).toFixed(1)}..{((bIdx + 1) * 0.2).toFixed(1)})
+                      </span>
+                    </div>
+
+                    <span style={{ color: '#475569', fontSize: '0.72rem', flexShrink: 0 }}>➔</span>
+
+                    {/* Elementi all'interno del bucket con padding orizzontale comodo */}
+                    <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', alignItems: 'center' }}>
                       {bList.length === 0 ? (
-                        <span style={{ fontSize: '0.7rem', color: '#475569', fontStyle: 'italic' }}>vuoto</span>
+                        <span style={{ fontSize: '0.68rem', color: '#475569', fontStyle: 'italic', fontFamily: 'monospace' }}>
+                          NIL
+                        </span>
                       ) : (
                         bList.map((num, nIdx) => (
                           <span key={nIdx} style={{
-                            padding: '2px 7px',
+                            padding: '2px 8px',
                             backgroundColor: '#111827',
                             border: '1px solid #334155',
                             borderRadius: '5px',
                             fontSize: '0.76rem',
-                            fontWeight: 700,
+                            fontWeight: 800,
                             fontFamily: 'monospace',
                             color: '#f8fafc'
                           }}>
-                            {num}
+                            {num.toFixed(2)}
                           </span>
                         ))
                       )}
@@ -388,7 +418,7 @@ export default function BucketSortApp({ setRigaAttiva }) {
           </div>
         </div>
 
-        {/* Log di esecuzione (ancorato rigorosamente senza espandersi) */}
+        {/* Log di esecuzione standard */}
         <div style={{ flex: '1 1 42%', backgroundColor: '#0b1120', padding: '16px', display: 'flex', flexDirection: 'column', minHeight: 0, position: 'relative' }}>
           <div style={{
             display: 'flex',

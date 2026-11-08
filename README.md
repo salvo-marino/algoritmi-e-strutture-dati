@@ -21,10 +21,10 @@ L'applicazione organizza gli algoritmi secondo la progressione didattica accadem
 - **Bubble Sort:** Tracciamento dei confronti adiacenti e propagazione controllata del massimo.
 - **Selection Sort (Iterativo & Ricorsivo):** Selezione del minimo locale sul vettore non ordinato e swap sequenziale.
 - **Insertion Sort (Iterativo & Ricorsivo):** Inserimento ordinato con shift degli elementi maggiori nel prefisso già stabilizzato.
-- **Quick Sort:** Partizionamento in-place basato sullo schema di Lomuto, evidenziazione del pivot e ramificazione ricorsiva.
 
 ### Modulo 01: Divide et Impera & Selezione
 - **Merge Sort:** Algoritmo divide et impera con ricorsione strutturata e procedura di fusione `Merge` a tempo lineare.
+- **Quick Sort:** Partizionamento in-place basato sullo schema di Lomuto, evidenziazione del pivot e ramificazione ricorsiva.
 - **Randomized-Select:** Selezione in tempo lineare medio del $k$-esimo elemento più piccolo tramite pivot randomizzato.
 - **Binary Search:** Ricerca dicotomica su collezioni ordinate con dimezzamento continuo dello spazio di ricerca.
 
@@ -40,8 +40,13 @@ L'applicazione organizza gli algoritmi secondo la progressione didattica accadem
 - **Radix Sort (LSD):** Ordinamento lineare su chiavi composte cifra per cifra (Least Significant Digit).
 - **Bucket Sort:** Ripartizione uniforme su bucket ausiliari e ordinamento parziale con densità bilanciata.
 
-### Modulo 04: Tabelle Hash *(In arrivo)*
-- Trattazione delle collisioni tramite liste concatenate e tecniche di indirizzamento aperto.
+### Modulo 04: Tabelle Hash
+- **Concatenamento (Chaining):** Tracciamento visivo delle collisioni con inserimento in testa (`Chained-Hash-Insert`), ricerca sequenziale (`Chained-Hash-Search`) e cancellazione a tempo costante tramite puntatori diretti (`Chained-Hash-Delete`).
+- **Indirizzamento Aperto (Open Addressing):** Risoluzione tramite sequenze di ispezione lineari e quadratiche (`Hash-Insert`), scavalcamento delle celle contrassegnate (`Hash-Search`) e marcatura speciale con valore sentinella `DELETED` (`Hash-Delete`).
+
+### Modulo 05: Alberi Rosso-Neri
+- **Left-Rotate:** Riorganizzazione topologica locale in tempo costante $\Theta(1)$ con traslazione del sottoalbero $\beta$ e inversione gerarchica tra perno $x$ e figlio destro $y$.
+- **Right-Rotate:** Operazione speculare e duale in $\Theta(1)$ per il riequilibrio del sottoalbero sinistro preservando l'ordinamento simmetrico BST.
 
 ---
 

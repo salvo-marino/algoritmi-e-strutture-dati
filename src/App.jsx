@@ -25,24 +25,36 @@ import SelectionSortApp from './algoritmi/SelectionSortApp';
 import InsertionSortApp from './algoritmi/InsertionSortApp';
 import SelectionSortRecApp from './algoritmi/SelectionSortRecApp';
 import InsertionSortRecApp from './algoritmi/InsertionSortRecApp';
-import QuickSortApp from './algoritmi/QuickSortApp';
 
-// Modulo 1: Divide et Impera
+// Modulo 01: Divide et Impera & Selezione
 import MergeSortApp from './algoritmi/MergeSortApp';
+import QuickSortApp from './algoritmi/QuickSortApp';
 import RandomizedSelectApp from './algoritmi/RandomizedSelectApp';
 import BinarySearchApp from './algoritmi/BinarySearchApp';
 
-// Modulo 2: Heaps
+// Modulo 02: Strutture ad Heap
 import MaxHeapifyApp from './algoritmi/MaxHeapifyApp';
 import BuildMaxHeapApp from './algoritmi/BuildMaxHeapApp';
 import HeapSortApp from './algoritmi/HeapSortApp';
 import PriorityQueueApp from './algoritmi/PriorityQueueApp';
 
-// Modulo 3: Linear Sorting
+// Modulo 03: Ordinamento Lineare
 import CountingSortApp from './algoritmi/CountingSortApp';
 import CountingInPlaceApp from './algoritmi/CountingInPlaceApp';
 import RadixSortApp from './algoritmi/RadixSortApp';
 import BucketSortApp from './algoritmi/BucketSortApp';
+
+// Modulo 04: Tabelle Hash
+import ChainedHashInsertApp from './algoritmi/ChainedHashInsertApp';
+import ChainedHashSearchApp from './algoritmi/ChainedHashSearchApp';
+import ChainedHashDeleteApp from './algoritmi/ChainedHashDeleteApp';
+import HashInsertApp from './algoritmi/HashInsertApp';
+import HashSearchApp from './algoritmi/HashSearchApp';
+import HashDeleteApp from './algoritmi/HashDeleteApp';
+
+// Modulo 05: Alberi Rosso-Neri
+import LeftRotateApp from './algoritmi/LeftRotateApp';
+import RightRotateApp from './algoritmi/RightRotateApp';
 
 const MODULI = [
   {
@@ -55,7 +67,6 @@ const MODULI = [
       { id: 'insertion-sort', label: 'Insertion Sort', comp: <InsertionSortApp /> },
       { id: 'selection-sort-rec', label: 'Selection Sort Ricorsivo', comp: <SelectionSortRecApp /> },
       { id: 'insertion-sort-rec', label: 'Insertion Sort Ricorsivo', comp: <InsertionSortRecApp /> },
-      { id: 'quick-sort', label: 'Quick Sort', comp: <QuickSortApp /> },
     ]
   },
   {
@@ -64,6 +75,7 @@ const MODULI = [
     badge: 'Modulo 01',
     algoritmi: [
       { id: 'merge-sort', label: 'Merge Sort', comp: <MergeSortApp /> },
+      { id: 'quick-sort', label: 'Quick Sort', comp: <QuickSortApp /> },
       { id: 'randomized-select', label: 'Randomized-Select', comp: <RandomizedSelectApp /> },
       { id: 'binary-search', label: 'Binary Search', comp: <BinarySearchApp /> },
     ]
@@ -95,8 +107,21 @@ const MODULI = [
     titolo: 'Tabelle Hash',
     badge: 'Modulo 04',
     algoritmi: [
-      { id: 'hash-chaining', label: 'Risoluzione Concatenata', comp: null },
-      { id: 'hash-methods', label: 'Metodo Divisione / Moltiplicazione', comp: null },
+      { id: 'chained-hash-insert', label: 'Chained-Hash-Insert', comp: <ChainedHashInsertApp /> },
+      { id: 'chained-hash-search', label: 'Chained-Hash-Search', comp: <ChainedHashSearchApp /> },
+      { id: 'chained-hash-delete', label: 'Chained-Hash-Delete', comp: <ChainedHashDeleteApp /> },
+      { id: 'hash-insert', label: 'Hash-Insert', comp: <HashInsertApp /> },
+      { id: 'hash-search', label: 'Hash-Search', comp: <HashSearchApp /> },
+      { id: 'hash-delete', label: 'Hash-Delete', comp: <HashDeleteApp /> },
+    ]
+  },
+  {
+    id: 'red-black-trees',
+    titolo: 'Alberi Rosso-Neri',
+    badge: 'Modulo 05',
+    algoritmi: [
+      { id: 'left-rotate', label: 'Left-Rotate', comp: <LeftRotateApp /> },
+      { id: 'right-rotate', label: 'Right-Rotate', comp: <RightRotateApp /> },
     ]
   }
 ];
@@ -107,7 +132,7 @@ function FormattedTheoryText({ text }) {
   const renderMathSafely = (mathStr, displayMode = false) => {
     try {
       return {
-        __html: katex.renderToString(mathStr, {
+        __html: katex.renderToString(mathStr.trim(), {
           displayMode,
           throwOnError: false,
           output: 'htmlAndMathml'
@@ -116,6 +141,23 @@ function FormattedTheoryText({ text }) {
     } catch (e) {
       return { __html: mathStr };
     }
+  };
+
+  const parseInlineMath = (segment, baseKey) => {
+    const mathParts = segment.split(/(\$.*?\$)/gs);
+    return mathParts.map((part, mIdx) => {
+      if (part.startsWith('$') && part.endsWith('$') && part.length >= 2) {
+        const mathContent = part.slice(1, -1);
+        return (
+          <span 
+            key={`${baseKey}-m-${mIdx}`} 
+            style={{ margin: '0 2px' }}
+            dangerouslySetInnerHTML={renderMathSafely(mathContent, false)} 
+          />
+        );
+      }
+      return part;
+    });
   };
 
   const lines = text.split('\n');
@@ -151,18 +193,38 @@ function FormattedTheoryText({ text }) {
           <div key={lIdx} style={{ marginBottom: line.trim() === '' ? '8px' : '4px', textAlign: 'left' }}>
             {tokens.map((token, tIdx) => {
               if (token.startsWith('[cyan]') && token.endsWith('[/cyan]')) {
-                return <span key={tIdx} style={{ color: '#38bdf8', fontWeight: 700 }}>{token.slice(6, -7)}</span>;
+                const inner = token.slice(6, -7);
+                return (
+                  <span key={tIdx} style={{ color: '#38bdf8', fontWeight: 700 }}>
+                    {parseInlineMath(inner, `${lIdx}-${tIdx}`)}
+                  </span>
+                );
               }
               if (token.startsWith('[amber]') && token.endsWith('[/amber]')) {
-                return <span key={tIdx} style={{ color: '#fbbf24', fontWeight: 700 }}>{token.slice(7, -8)}</span>;
+                const inner = token.slice(7, -8);
+                return (
+                  <span key={tIdx} style={{ color: '#fbbf24', fontWeight: 700 }}>
+                    {parseInlineMath(inner, `${lIdx}-${tIdx}`)}
+                  </span>
+                );
               }
               if (token.startsWith('[emerald]') && token.endsWith('[/emerald]')) {
-                return <span key={tIdx} style={{ color: '#34d399', fontWeight: 700 }}>{token.slice(9, -10)}</span>;
+                const inner = token.slice(9, -10);
+                return (
+                  <span key={tIdx} style={{ color: '#34d399', fontWeight: 700 }}>
+                    {parseInlineMath(inner, `${lIdx}-${tIdx}`)}
+                  </span>
+                );
               }
               if (token.startsWith('**') && token.endsWith('**')) {
-                return <strong key={tIdx} style={{ color: '#f8fafc', fontWeight: 700 }}>{token.slice(2, -2)}</strong>;
+                const inner = token.slice(2, -2);
+                return (
+                  <strong key={tIdx} style={{ color: '#f8fafc', fontWeight: 700 }}>
+                    {parseInlineMath(inner, `${lIdx}-${tIdx}`)}
+                  </strong>
+                );
               }
-              if (token.startsWith('$') && token.endsWith('$') && token.length > 2) {
+              if (token.startsWith('$') && token.endsWith('$') && token.length >= 2) {
                 const inlineMath = token.slice(1, -1);
                 return (
                   <span 
@@ -187,6 +249,7 @@ export default function App() {
   const [mostraCodice, setMostraCodice] = useState(true);
   const [rigaAttiva, setRigaAttiva] = useState(null);
   const [mostraInfoModal, setMostraInfoModal] = useState(false);
+  const [varianteCodice, setVarianteCodice] = useState('appunti');
 
   useEffect(() => {
     const linkId = 'katex-css-cdn';
@@ -204,12 +267,18 @@ export default function App() {
   const algoritmoSelezionato = moduloCorrente.algoritmi.find(a => a.id === algoritmoAttivo) || moduloCorrente.algoritmi[0];
   const datiCorrenti = ARCHIVIO_ALGORITMI[algoritmoSelezionato.id] || null;
 
+  const haDoppiaVersione = datiCorrenti && Boolean(datiCorrenti.righeComplete);
+  const righeVisualizzate = (haDoppiaVersione && varianteCodice === 'completo') 
+    ? datiCorrenti.righeComplete 
+    : (datiCorrenti ? datiCorrenti.righe : []);
+
   const cambiaCategoria = (catId) => {
     setCategoriaAttiva(catId);
     const nuovoModulo = MODULI.find(m => m.id === catId);
     if (nuovoModulo && nuovoModulo.algoritmi.length > 0) {
       setAlgoritmoAttivo(nuovoModulo.algoritmi[0].id);
       setRigaAttiva(null);
+      setVarianteCodice('appunti');
     }
   };
 
@@ -518,6 +587,7 @@ export default function App() {
               onClick={() => {
                 setAlgoritmoAttivo(algo.id);
                 setRigaAttiva(null);
+                setVarianteCodice('appunti');
               }}
               style={{
                 flexShrink: 0,
@@ -578,7 +648,9 @@ export default function App() {
               height: '100%'
             }}>
               <BookOpen size={28} color="#64748b" style={{ marginBottom: '12px' }} />
-              <h3 style={{ margin: 0, color: '#f8fafc', fontSize: '1.1rem' }}>{algoritmoSelezionato.label}</h3>
+              <h3 style={{ margin: 0, color: '#f8fafc', fontSize: '1.1rem' }}>
+                {algoritmoSelezionato.label}
+              </h3>
               <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '6px' }}>Modulo in arrivo.</p>
             </div>
           )}
@@ -623,24 +695,70 @@ export default function App() {
                     {mostraCodice ? datiCorrenti.titolo : 'Analisi & Dimostrazione Asintotica'}
                   </strong>
                 </div>
-                <span style={{
-                  fontSize: '0.72rem',
-                  color: '#38bdf8',
-                  backgroundColor: 'rgba(56, 189, 248, 0.1)',
-                  border: '1px solid rgba(56, 189, 248, 0.25)',
-                  padding: '2px 7px',
-                  borderRadius: '6px',
-                  fontFamily: 'monospace',
-                  fontWeight: 700
-                }}>
-                  {datiCorrenti.complessita}
-                </span>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  {mostraCodice && haDoppiaVersione && (
+                    <div style={{
+                      display: 'flex',
+                      backgroundColor: '#070b14',
+                      padding: '2px',
+                      borderRadius: '6px',
+                      border: '1px solid rgba(56, 189, 248, 0.25)',
+                      marginRight: '4px'
+                    }}>
+                      <button
+                        onClick={() => setVarianteCodice('appunti')}
+                        title="Formulazione sintetica presente negli appunti"
+                        style={{
+                          backgroundColor: varianteCodice === 'appunti' ? '#0284c7' : 'transparent',
+                          color: varianteCodice === 'appunti' ? '#ffffff' : '#94a3b8',
+                          border: 'none',
+                          padding: '2px 7px',
+                          borderRadius: '4px',
+                          fontSize: '0.66rem',
+                          fontWeight: 700,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Appunti
+                      </button>
+                      <button
+                        onClick={() => setVarianteCodice('completo')}
+                        title="Pseudocodice procedurale dettagliato (CLRS)"
+                        style={{
+                          backgroundColor: varianteCodice === 'completo' ? '#0284c7' : 'transparent',
+                          color: varianteCodice === 'completo' ? '#ffffff' : '#94a3b8',
+                          border: 'none',
+                          padding: '2px 7px',
+                          borderRadius: '4px',
+                          fontSize: '0.66rem',
+                          fontWeight: 700,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Completo
+                      </button>
+                    </div>
+                  )}
+
+                  <span style={{
+                    fontSize: '0.72rem',
+                    color: '#38bdf8',
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    border: '1px solid rgba(56, 189, 248, 0.25)',
+                    padding: '2px 7px',
+                    borderRadius: '6px',
+                    fontFamily: 'monospace',
+                    fontWeight: 700
+                  }}>
+                    {datiCorrenti.complessita}
+                  </span>
+                </div>
               </div>
 
               {/* Contenuto Flessibile Scorrevole */}
               <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
                 {mostraCodice ? (
-                  /* VISTA 1: PSEUDOCODICE */
                   <div className="custom-scrollbar" style={{
                     position: 'absolute',
                     top: 0,
@@ -656,7 +774,7 @@ export default function App() {
                     lineHeight: 1.55
                   }}>
                     <div style={{ minWidth: 'max-content', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                      {datiCorrenti.righe.map((r, idx) => {
+                      {righeVisualizzate.map((r, idx) => {
                         const isHeader = typeof r.num === 'string' && r.num.startsWith('H');
                         const isHighlighted = rigaAttiva === r.id || rigaAttiva === r.num;
 
@@ -726,7 +844,6 @@ export default function App() {
                     </div>
                   </div>
                 ) : (
-                  /* VISTA 2: TEORIA DETTAGLIATA CON FORMULE KATEX */
                   <div className="custom-scrollbar" style={{
                     position: 'absolute',
                     top: 0,
@@ -809,7 +926,7 @@ export default function App() {
 
       </div>
 
-      {/* MODAL: INFO AUTORE, COPYRIGHT & RELEASE CON ANIMAZIONI */}
+      {/* MODAL: INFO AUTORE, COPYRIGHT & RELEASE */}
       {mostraInfoModal && (
         <div 
           className="modal-overlay"
@@ -846,7 +963,6 @@ export default function App() {
               overflow: 'hidden'
             }}
           >
-            {/* Modal Header */}
             <div style={{
               padding: '14px 20px',
               backgroundColor: '#0f172a',
@@ -878,7 +994,6 @@ export default function App() {
               </button>
             </div>
 
-            {/* Modal Body */}
             <div className="custom-scrollbar" style={{
               padding: '18px 20px',
               overflowY: 'auto',
@@ -887,7 +1002,6 @@ export default function App() {
               gap: '16px',
               textAlign: 'left'
             }}>
-              {/* Box Autore & Copyright */}
               <div style={{
                 backgroundColor: '#0f172a',
                 border: '1px solid #1e293b',
@@ -927,7 +1041,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Sezione Release Notes collegate ai commit */}
               <div>
                 <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '10px' }}>
                   Cronologia Release di GitHub

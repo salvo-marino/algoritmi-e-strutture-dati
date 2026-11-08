@@ -11,6 +11,19 @@ export const PATCH_NOTES = [
 //     ]
 //   },
   {
+    version: "v0.2",
+    tag: "Tabelle Hash & introduzione Alberi Rosso-Neri",
+    date: "8 Novembre 2026",
+    commitRef: "releases/tag/v0.2",
+    changes: [
+      "Algoritmi Tabelle Hash (Chained-Hash-Insert, Chained-Hash-Search, Chained-Hash-Delete, Hash-Insert, Hash-Search, Hash-Delete) (Modulo 04).",
+      "Primi algoritmi Alberi Rosso-Neri (Left-Rotate e Right-Rotate) (Modulo 05).",
+      "Riorganizzazione didattica: spostamento di Quick Sort dal Modulo 00 al Modulo 01 (Divide et Impera).",
+      "Ottimizzazione UI/UX: standardizzazione geometrica dei visualizer e gestione del layout dei bucket.",
+      "Teoria e Dimostrazioni degli algoritmi implementati."
+    ]
+  },
+  {
     version: "v0.1",
     tag: "Creazione Progetto & Rilascio intermedio",
     date: "4 Novembre 2026",
@@ -25,5 +38,5 @@ export const PATCH_NOTES = [
       "Algoritmi Ordinamento Lineare (Counting Sort Standard e In-Place, Radix Sort, Bucket Sort) (Modulo 03).",
       "Teoria e Dimostrazioni degli algoritmi implementati"
     ]
-  }
+  },
 ];
