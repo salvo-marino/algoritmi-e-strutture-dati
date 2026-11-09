@@ -55,6 +55,7 @@ import HashDeleteApp from './algoritmi/HashDeleteApp';
 // Modulo 05: Alberi Rosso-Neri
 import LeftRotateApp from './algoritmi/LeftRotateApp';
 import RightRotateApp from './algoritmi/RightRotateApp';
+import RBInsertApp from './algoritmi/RBInsertApp';
 
 const MODULI = [
   {
@@ -122,6 +123,7 @@ const MODULI = [
     algoritmi: [
       { id: 'left-rotate', label: 'Left-Rotate', comp: <LeftRotateApp /> },
       { id: 'right-rotate', label: 'Right-Rotate', comp: <RightRotateApp /> },
+      { id: 'rb-insert', label: 'Inserimento & Fixup', comp: <RBInsertApp /> },
     ]
   }
 ];

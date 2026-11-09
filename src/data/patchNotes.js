@@ -11,6 +11,16 @@ export const PATCH_NOTES = [
 //     ]
 //   },
   {
+    version: "v0.2.1",
+    tag: "Inserimento negli Alberi Rosso-Neri",
+    date: "9 Novembre 2026",
+    commitRef: "releases/tag/v0.2.1",
+    changes: [
+      "Inserimento negli Alberi Rosso-Neri (Inserimento & Fixup) (Modulo 05).",
+      "Teoria e Dimostrazione degli algoritmi implementati."
+    ]
+  },
+  {
     version: "v0.2",
     tag: "Tabelle Hash & introduzione Alberi Rosso-Neri",
     date: "8 Novembre 2026",

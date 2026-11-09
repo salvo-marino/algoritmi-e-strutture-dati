@@ -47,6 +47,7 @@ L'applicazione organizza gli algoritmi secondo la progressione didattica accadem
 ### Modulo 05: Alberi Rosso-Neri
 - **Left-Rotate:** Riorganizzazione topologica locale in tempo costante $\Theta(1)$ con traslazione del sottoalbero $\beta$ e inversione gerarchica tra perno $x$ e figlio destro $y$.
 - **Right-Rotate:** Operazione speculare e duale in $\Theta(1)$ per il riequilibrio del sottoalbero sinistro preservando l'ordinamento simmetrico BST.
+- **RB-Insert & Fixup:** Inserimento foglia conforme ai BST con colorazione rossa iniziale in $\mathcal{O}(\log n)$, seguito dalla procedura di ripristino cromatico e strutturale a monte mediante gestione dei tre casi (zio rosso con ricolorazione e risalita, zio nero a zig-zag con rotazione di allineamento, zio nero lineare con rotazione e ricolorazione terminale) garantendo al più 2 rotazioni complessive.
 
 ---
 
